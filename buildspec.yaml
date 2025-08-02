@@ -1,32 +1,21 @@
-    const buildProject = new codebuild.PipelineProject(this, 'project', {
-      environment: {// I guess I need to select ubuntu and image 4.0},
-      buildSpec: codebuild.BuildSpec.fromObject({
-        version: '0.2',
-        phases: {
-          build: {
-            commands:['
-              version: 0.2
-                phases:
-                    install:
-                        runtime-versions:
-                            docker: 18
-                    build:
-                        commands:
-                            - apt-get install jq -y
-                            - ContainerName="tnkDjangoContainer"
-                            - ImageURI=$(cat imageDetail.json | jq -r '.ImageURI')
-                            - printf '[{"name":"CONTAINER_NAME","imageUri":"IMAGE_URI"}]' > imagedefinitions.json
-                            - sed -i -e "s|CONTAINER_NAME|$ContainerName|g" imagedefinitions.json
-                            - sed -i -e "s|IMAGE_URI|$ImageURI|g" imagedefinitions.json
-                            - cat imagedefinitions.json
-
-                artifacts:
-                    files:
-                        - imagedefinitions.json
-              
-              ',         
-            ],
-          },
-        }
-      })
-    });
+Name: Build
+Actions:
+  - Name: PackageExport
+    ActionTypeId:
+      Category: Build
+      Owner: AWS
+      Provider: CodeBuild
+      Version: '1'
+    RunOrder: 1
+    Configuration:
+      BatchEnabled: 'true'
+      CombineArtifacts: 'true'
+      ProjectName: my-build-project
+      PrimarySource: MyApplicationSource1
+      EnvironmentVariables: '[{"name":"TEST_VARIABLE","value":"TEST_VALUE","type":"PLAINTEXT"},{"name":"ParamStoreTest","value":"PARAMETER_NAME","type":"PARAMETER_STORE"}]'
+    OutputArtifacts:
+      - Name: MyPipeline-BuildArtifact
+    InputArtifacts:
+      - Name: MyApplicationSource1
+      - Name: MyApplicationSource2
+      

@@ -1,8 +1,5 @@
 ---
-Parameters:
-  SecurityGroupDescription:
-    Description: Security Group Description
-    Type: String
+
 
 Resources:
   MyInstance:
@@ -46,7 +43,7 @@ Resources:
   ServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Ref SecurityGroupDescription
+      GroupDescription: Test security group
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80

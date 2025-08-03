@@ -14,6 +14,7 @@ Resources:
       SecurityGroups:
         - !Ref SSHSecurityGroup
         - !Ref ServerSecurityGroup
+        - !Ref SSHDSecurityGroup
 
   # an elastic IP for our instance
   MyEIP:
@@ -31,6 +32,15 @@ Resources:
           FromPort: 22
           IpProtocol: tcp
           ToPort: 22
+  SSHDSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 5588
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 5588
+          IpProtocol: tcp
+          ToPort: 5588
 
   # our second EC2 security group
   ServerSecurityGroup:
